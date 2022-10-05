@@ -1,7 +1,7 @@
 pipeline {
   agent {
     kubernetes {
-      cloud 'kubernetes-study'
+      cloud 'study-kubernetes'
       slaveConnectTimeout 1200
       workspaceVolume hostPathWorkspaceVolume(hostPath: "/opt/workspace", readOnly: false)
       yaml '''
@@ -101,7 +101,7 @@ spec:
 
           }
           steps {
-            git(changelog: true, poll: true, url: 'git@CHANGE_HERE_FOR_YOUR_GITLAB_URL:root/spring-boot-project.git', branch: "${BRANCH}", credentialsId: 'gitlab-key')
+            git(changelog: true, poll: true, url: 'http://192.168.14.202/kubernetes/spring-boot-project.git', branch: "${BRANCH}", credentialsId: 'gitlab')
             script {
               COMMIT_ID = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
               TAG = BUILD_TAG + '-' + COMMIT_ID
@@ -120,7 +120,7 @@ spec:
 
           }
           steps {
-            git(url: 'git@CHANGE_HERE_FOR_YOUR_GITLAB_URL:root/spring-boot-project.git', branch: env.gitlabBranch, changelog: true, poll: true, credentialsId: 'gitlab-key')
+            git(url: 'http://192.168.14.202/kubernetes/spring-boot-project.git', branch: env.gitlabBranch, changelog: true, poll: true, credentialsId: 'gitlab')
             script {
               COMMIT_ID = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
               TAG = BUILD_TAG + '-' + COMMIT_ID
@@ -163,7 +163,7 @@ spec:
 
     stage('Deploying to K8s') {
       environment {
-        MY_KUBECONFIG = credentials('study-k8s-kubeconfig')
+        MY_KUBECONFIG = credentials('study-kubernetes')
     }
       steps {
         container(name: 'kubectl'){
@@ -177,7 +177,7 @@ spec:
   }
   environment {
     COMMIT_ID = ""
-    HARBOR_ADDRESS = "CHANGE_HERE_FOR_YOUR_HARBOR_URL"
+    HARBOR_ADDRESS = "192.168.14.203"
     REGISTRY_DIR = "kubernetes"
     IMAGE_NAME = "spring-boot-project"
     NAMESPACE = "kubernetes"
