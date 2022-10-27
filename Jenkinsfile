@@ -101,7 +101,7 @@ spec:
 
           }
           steps {
-            git(changelog: true, poll: true, url: 'http://192.168.14.202/kubernetes/spring-boot-project.git', branch: "${BRANCH}", credentialsId: 'gitlab')
+            git(changelog: true, poll: true, url: 'http://192.168.14.244/kubernetes/spring-boot-project.git', branch: "${BRANCH}", credentialsId: 'gitlab')
             script {
               COMMIT_ID = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
               TAG = BUILD_TAG + '-' + COMMIT_ID
@@ -120,7 +120,7 @@ spec:
 
           }
           steps {
-            git(url: 'http://192.168.14.202/kubernetes/spring-boot-project.git', branch: env.gitlabBranch, changelog: true, poll: true, credentialsId: 'gitlab')
+            git(url: 'http://192.168.14.244/kubernetes/spring-boot-project.git', branch: env.gitlabBranch, changelog: true, poll: true, credentialsId: 'gitlab')
             script {
               COMMIT_ID = sh(returnStdout: true, script: "git log -n 1 --pretty=format:'%h'").trim()
               TAG = BUILD_TAG + '-' + COMMIT_ID
@@ -177,7 +177,7 @@ spec:
   }
   environment {
     COMMIT_ID = ""
-    HARBOR_ADDRESS = "192.168.14.203"
+    HARBOR_ADDRESS = "192.168.14.244:5000"
     REGISTRY_DIR = "kubernetes"
     IMAGE_NAME = "spring-boot-project"
     NAMESPACE = "kubernetes"
@@ -187,3 +187,4 @@ spec:
     gitParameter(branch: '', branchFilter: 'origin/(.*)', defaultValue: '', description: 'Branch for build and deploy', name: 'BRANCH', quickFilterEnabled: false, selectedValue: 'NONE', sortMode: 'NONE', tagFilter: '*', type: 'PT_BRANCH')
   }
 }
+
